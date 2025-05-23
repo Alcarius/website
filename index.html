@@ -1,9 +1,192 @@
-echo "<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Hello World</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alcarius.net Logo Animation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Cinzel Decorative', cursive;
+            background: radial-gradient(ellipse at center, #1a0c29 0%, #0f051a 70%, #05020a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #E0E0E0; /* Light grey / silver for text */
+        }
+
+        .logo-container {
+            text-align: center;
+            position: relative; /* For star positioning */
+        }
+
+        .alcarius-text {
+            font-size: clamp(3rem, 10vw, 6rem); /* Responsive font size */
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            position: relative; /* For z-index if needed */
+        }
+
+        .alcarius-text .char {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(30px) scale(0.8) rotateX(-45deg);
+            filter: blur(8px);
+            animation: conjureLetter 1s forwards;
+            text-shadow: 
+                0 0 5px #c0c0c0, /* Silver base glow */
+                0 0 10px #c0c0c0,
+                0 0 15px #7F00FF, /* Violet magical glow */
+                0 0 20px #7F00FF,
+                0 0 25px #7F00FF,
+                0 0 30px #7F00FF;
+        }
+
+        /* Staggered animation delays for each letter of "Alcarius" */
+        .alcarius-text .char:nth-child(1) { animation-delay: 0.5s; }
+        .alcarius-text .char:nth-child(2) { animation-delay: 0.7s; }
+        .alcarius-text .char:nth-child(3) { animation-delay: 0.9s; }
+        .alcarius-text .char:nth-child(4) { animation-delay: 1.1s; }
+        .alcarius-text .char:nth-child(5) { animation-delay: 1.3s; }
+        .alcarius-text .char:nth-child(6) { animation-delay: 1.5s; }
+        .alcarius-text .char:nth-child(7) { animation-delay: 1.7s; }
+        .alcarius-text .char:nth-child(8) { animation-delay: 1.9s; } /* 's' */
+
+        @keyframes conjureLetter {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.8) rotateX(-45deg);
+                filter: blur(8px);
+                text-shadow: 
+                    0 0 10px #7F00FF,
+                    0 0 20px #7F00FF,
+                    0 0 30px #7F00FF;
+            }
+            70% {
+                opacity: 0.8;
+                transform: translateY(0) scale(1.05) rotateX(0deg);
+                filter: blur(1px);
+                 text-shadow: 
+                    0 0 5px #e0e0e0,
+                    0 0 10px #e0e0e0,
+                    0 0 20px #ab47bc, /* Lighter Violet */
+                    0 0 30px #ab47bc,
+                    0 0 40px #7F00FF,
+                    0 0 50px #7F00FF;
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotateX(0deg);
+                filter: blur(0);
+                text-shadow: 
+                    0 0 3px #f0f0f0,
+                    0 0 6px #d0d0d0,
+                    0 0 10px #9c27b0, /* Final subtle Violet */
+                    0 0 15px #9c27b0,
+                    0 0 20px #7F00FF;
+                animation: subtleGlow 3s infinite alternate 2.5s; /* Start after reveal */
+            }
+        }
+        
+        @keyframes subtleGlow {
+            from {
+                text-shadow: 
+                    0 0 3px #f0f0f0,
+                    0 0 6px #d0d0d0,
+                    0 0 10px #9c27b0,
+                    0 0 15px #9c27b0,
+                    0 0 20px #7F00FF;
+            }
+            to {
+                text-shadow: 
+                    0 0 4px #ffffff,
+                    0 0 8px #e0e0e0,
+                    0 0 12px #ab47bc, /* Lighter Violet for pulse */
+                    0 0 18px #ab47bc,
+                    0 0 25px #7F00FF;
+            }
+        }
+
+        .domain-text {
+            font-family: 'Roboto', sans-serif;
+            font-size: clamp(1rem, 3vw, 1.8rem); /* Responsive font size */
+            font-weight: 300;
+            letter-spacing: 1px;
+            opacity: 0;
+            color: #B0B0B0; /* Slightly darker grey for .net */
+            animation: fadeInDomain 1.5s forwards;
+            animation-delay: 2.8s; /* Starts after "Alcarius" is mostly formed (1.9s + ~1s for animation) */
+            text-shadow: 0 0 5px #7F00FF;
+        }
+
+        @keyframes fadeInDomain {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Background Stars */
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: rgba(224, 224, 255, 0.7); /* Faint blueish white */
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(200, 200, 255, 0.5), 0 0 10px rgba(180, 180, 255, 0.3);
+            animation: twinkle 5s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+    </style>
 </head>
 <body>
-  <h1>Hello, World!</h1>
+    <div class="logo-container">
+        <div class="alcarius-text">
+            <span class="char">A</span><span class="char">l</span><span class="char">c</span><span class="char">a</span><span class="char">r</span><span class="char">i</span><span class="char">u</span><span class="char">s</span>
+        </div>
+        <div class="domain-text">.net</div>
+    </div>
+
+    <script>
+        // JavaScript to create and animate stars
+        document.addEventListener('DOMContentLoaded', () => {
+            const numStars = 100; // Number of stars
+            const logoContainer = document.querySelector('.logo-container');
+            const body = document.body;
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Position stars randomly across the viewport
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+                
+                // Randomize size and animation delay for a more natural look
+                const randomSize = Math.random() * 2 + 1; // Size between 1px and 3px
+                star.style.width = `${randomSize}px`;
+                star.style.height = `${randomSize}px`;
+                star.style.animationDelay = `${Math.random() * 5}s`; // Stagger twinkle
+                star.style.animationDuration = `${Math.random() * 3 + 3}s`; // Vary twinkle speed
+                
+                body.appendChild(star); // Append to body to cover full screen
+            }
+        });
+    </script>
 </body>
-</html>" > index.html
+</html>
