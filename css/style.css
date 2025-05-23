@@ -1,0 +1,97 @@
+/* Import Tailwind base styles (optional if you prefer to manage everything, but good for resets) */
+/* @tailwind base; */
+/* @tailwind components; */
+/* @tailwind utilities; */
+
+/* --- Custom Styles --- */
+
+body.bg-parchment {
+    /* A subtle parchment-like background. You can replace this with a repeating image texture for more effect. */
+    background-color: #f5eFDC; /* A light, parchment-like beige */
+    /* Example using a gradient for a bit more texture:
+    background-image: linear-gradient(to bottom, #f5e8c8 0%, #e6d5b0 100%);
+    */
+    font-family: 'Inter', sans-serif; /* Default sans-serif for readability */
+    color: #4a3b31; /* Dark brown text for contrast on parchment */
+}
+
+/* Headings and special text using the fantasy font */
+.font-medievalsharp {
+    font-family: 'MedievalSharp', cursive;
+}
+
+/* --- Navigation Styling --- */
+.nav-link {
+    @apply text-white/80 hover:text-white hover:underline decoration-amber-300 underline-offset-4 transition-colors duration-200;
+    font-family: 'MedievalSharp', cursive; /* Using fantasy font for nav links */
+}
+
+.nav-link.active-link {
+    @apply text-amber-300 font-bold;
+}
+
+/* --- Content Section Styling --- */
+.content-section {
+    /* Adding a subtle inner shadow or border can enhance the "paper" feel */
+    border: 1px solid rgba(139, 69, 19, 0.2); /* SaddleBrown with alpha */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), inset 0 0 10px rgba(245, 239, 220, 0.5);
+}
+
+/* Custom scrollbar for a more thematic feel (Webkit browsers) */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #e6d5b0; /* Lighter parchment for track */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #8B4513; /* SaddleBrown */
+    border-radius: 10px;
+    border: 2px solid #f5eFDC; /* Parchment border around thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #A0522D; /* Sienna - slightly lighter brown on hover */
+}
+
+/* --- General Link Styling --- */
+main a {
+    @apply text-red-700 hover:text-red-900 underline underline-offset-2 decoration-red-700/50 hover:decoration-red-900;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    header h1 {
+        @apply text-4xl; /* Smaller main title on mobile */
+    }
+    nav ul {
+        @apply justify-around space-x-2; /* Adjust nav spacing for smaller screens */
+    }
+    .nav-link {
+        @apply text-base px-1; /* Smaller nav links */
+    }
+    .content-section h2 {
+        @apply text-2xl;
+    }
+}
+
+/* Add a subtle texture to the body if you have a seamless parchment image */
+/*
+body.bg-parchment {
+    background-image: url('../assets/images/parchment-texture.png');
+    background-repeat: repeat;
+}
+*/
+
+/* Example of a more ornate border for sections */
+/*
+.content-section-ornate {
+    border: 10px solid transparent;
+    border-image: url('../assets/images/ornate-border.svg') 30 stretch; // Ensure you have an SVG border image
+    border-image-outset: 5px;
+}
+*/
