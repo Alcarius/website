@@ -1,9 +1,11 @@
 // Import Firebase modules
+// Importieren Sie die benötigten Funktionen aus den SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
 // Your web app's Firebase configuration - DIRECTLY EMBEDDED HERE
+// Die Firebase-Konfiguration Ihrer Web-App – HIER DIREKT EINGEBETTET
 const firebaseConfig = {
     apiKey: "AIzaSyADwTnw2J5C9BpWPJsDhsHBHbkVckm6HjU",
     authDomain: "dndwiki-fb2a5.firebaseapp.com",
@@ -14,17 +16,20 @@ const firebaseConfig = {
 };
 
 // Use projectId for Firestore paths as it's a clean string without special characters
-const projectId = firebaseConfig.projectId; // This is used in the path to keep it unique per project
+// Verwenden Sie die projectId für Firestore-Pfade, da es sich um einen sauberen String ohne Sonderzeichen handelt
+const projectId = firebaseConfig.projectId; // Dies wird im Pfad verwendet, um es pro Projekt eindeutig zu machen
 
 // The __initial_auth_token is still expected from the Canvas environment for authentication
+// Der __initial_auth_token wird weiterhin aus der Canvas-Umgebung für die Authentifizierung erwartet
 const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
 let app;
 let db;
 let auth;
-let currentUserId = null; // We still authenticate for logging purposes, but data path is public now
+let currentUserId = null; // Wir authentifizieren uns immer noch zu Protokollierungszwecken, aber der Datenpfad ist jetzt öffentlich
 
 // Define the sections for the wiki
+// Definieren Sie die Abschnitte für das Wiki
 const wikiSections = [
     { id: 'introduction', title: 'Campaign Introduction' },
     { id: 'locations', title: 'Locations' },
@@ -36,52 +41,60 @@ const wikiSections = [
 ];
 
 // Object to hold unsubscribe functions for each section's snapshot listener
+// Objekt zum Speichern von Abmeldefunktionen für den Snapshot-Listener jedes Abschnitts
 const sectionUnsubscribeListeners = {};
 
 // Function to display a temporary message box
+// Funktion zum Anzeigen einer temporären Nachrichtenbox
 function showMessageBox(message, type = 'success') {
     const msgBox = document.getElementById('message-box');
     msgBox.textContent = message;
-    msgBox.className = 'message-box show'; // Reset classes and add 'show'
+    msgBox.className = 'message-box show'; // Klassen zurücksetzen und 'show' hinzufügen
     if (type === 'error') {
-        msgBox.style.backgroundColor = '#f44336'; // Red for error
+        msgBox.style.backgroundColor = '#f44336'; // Rot für Fehler
     } else {
-        msgBox.style.backgroundColor = '#4CAF50'; // Green for success
+        msgBox.style.backgroundColor = '#4CAF50'; // Grün für Erfolg
     }
 
     setTimeout(() => {
         msgBox.classList.remove('show');
-    }, 3000); // Hide after 3 seconds
+    }, 3000); // Nach 3 Sekunden ausblenden
 }
 
 // Initialize Firebase and set up authentication
+// Firebase initialisieren und Authentifizierung einrichten
 window.onload = async function () {
     try {
         // Initialize Firebase with the directly embedded config
+        // Firebase mit der direkt eingebetteten Konfiguration initialisieren
         app = initializeApp(firebaseConfig);
         db = getFirestore(app);
         auth = getAuth(app);
 
         // Set the current year in the footer
+        // Das aktuelle Jahr in der Fußzeile festlegen
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
         // Listen for authentication state changes (still useful for logging/analytics)
+        // Auf Authentifizierungsstatusänderungen hören (immer noch nützlich für Protokollierung/Analysen)
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 // User is signed in
+                // Benutzer ist angemeldet
                 currentUserId = user.uid;
                 console.log("User signed in successfully. User ID:", currentUserId);
-                // Removed: document.getElementById('user-id-display').textContent = `User ID: ${currentUserId}`;
+                // Entfernt: document.getElementById('user-id-display').textContent = `User ID: ${currentUserId}`;
             } else {
                 // User is signed out
+                // Benutzer ist abgemeldet
                 console.log("User is currently signed out. Attempting anonymous sign-in or custom token sign-in...");
-                // Removed: document.getElementById('user-id-display').textContent = `User ID: Not authenticated`;
+                // Entfernt: document.getElementById('user-id-display').textContent = `User ID: Not authenticated`;
                 try {
                     if (initialAuthToken) {
                         await signInWithCustomToken(auth, initialAuthToken);
                         console.log("Attempted sign-in with custom token.");
                     } else {
-                        await signInAnonymously(auth); // Still try anonymous sign-in even if not strictly needed for access
+                        await signInAnonymously(auth); // Versuchen Sie immer noch die anonyme Anmeldung, auch wenn sie für den Zugriff nicht unbedingt erforderlich ist
                         console.log("Attempted anonymous sign-in.");
                     }
                 } catch (error) {
@@ -90,10 +103,12 @@ window.onload = async function () {
                 }
             }
             // Load content for all sections regardless of auth status, since rules will be public
+            // Laden Sie Inhalte für alle Abschnitte unabhängig vom Authentifizierungsstatus, da die Regeln öffentlich sind
             loadAllSectionsContent();
         });
 
         // Add event listeners for all save buttons
+        // Ereignis-Listener für alle Speicher-Buttons hinzufügen
         document.querySelectorAll('.save-button').forEach(button => {
             button.addEventListener('click', (event) => {
                 const sectionId = event.target.dataset.section;
@@ -103,6 +118,7 @@ window.onload = async function () {
         });
 
         // Add event listeners for all edit buttons
+        // Ereignis-Listener für alle Bearbeiten-Buttons hinzufügen
         document.querySelectorAll('.edit-button').forEach(button => {
             button.addEventListener('click', (event) => {
                 const sectionId = event.target.dataset.section;
@@ -117,6 +133,7 @@ window.onload = async function () {
 };
 
 // Function to load content for all wiki sections
+// Funktion zum Laden von Inhalten für alle Wiki-Abschnitte
 function loadAllSectionsContent() {
     console.log("Loading content for all wiki sections...");
     wikiSections.forEach(section => {
@@ -125,6 +142,7 @@ function loadAllSectionsContent() {
 }
 
 // Function to save content for a specific section to Firestore
+// Funktion zum Speichern von Inhalten für einen bestimmten Abschnitt in Firestore
 async function saveSectionContent(sectionId) {
     console.log(`Attempting to save content for section: ${sectionId}`);
     if (currentUserId) {
@@ -133,9 +151,9 @@ async function saveSectionContent(sectionId) {
         console.log("Saving as unauthenticated user.");
     }
 
-
     const contentInput = document.querySelector(`.content-input[data-section="${sectionId}"]`).value;
     // NEW PATH: artifacts/{projectId}/publicWikiContent/{sectionId}
+    // NEUER PFAD: artifacts/{projectId}/publicWikiContent/{sectionId}
     const contentRef = doc(db, `artifacts/${projectId}/publicWikiContent`, sectionId);
 
     try {
@@ -143,7 +161,7 @@ async function saveSectionContent(sectionId) {
         console.log(`Content for ${sectionId} saved successfully to publicWikiContent!`);
         const sectionTitle = wikiSections.find(s => s.id === sectionId)?.title || sectionId;
         showMessageBox(`Content for ${sectionTitle} saved!`);
-        toggleEditorVisibility(sectionId); // Hide editor after saving
+        toggleEditorVisibility(sectionId); // Editor nach dem Speichern ausblenden
     } catch (error) {
         console.error(`Error saving content for ${sectionId}:`, error);
         const sectionTitle = wikiSections.find(s => s.id === sectionId)?.title || sectionId;
@@ -152,19 +170,23 @@ async function saveSectionContent(sectionId) {
 }
 
 // Function to load content for a specific section from Firestore using onSnapshot
+// Funktion zum Laden von Inhalten für einen bestimmten Abschnitt aus Firestore mithilfe von onSnapshot
 function loadSectionContent(sectionId) {
     // No need to check currentUserId if rules allow public read
+    // Keine Notwendigkeit, currentUserId zu überprüfen, wenn Regeln das öffentliche Lesen erlauben
     const contentInput = document.querySelector(`.content-input[data-section="${sectionId}"]`);
     const contentDisplay = document.querySelector(`.content-display[data-section="${sectionId}"]`);
     const sectionTitle = wikiSections.find(s => s.id === sectionId)?.title || sectionId;
 
     // Unsubscribe from previous listener for this section if it exists
+    // Vom vorherigen Listener für diesen Abschnitt abmelden, falls vorhanden
     if (sectionUnsubscribeListeners[sectionId]) {
         sectionUnsubscribeListeners[sectionId]();
         console.log(`Unsubscribed from previous snapshot listener for section: ${sectionId}`);
     }
 
     // Set initial loading state
+    // Initialen Ladestatus festlegen
     if (contentDisplay) {
         contentDisplay.innerHTML = `<p class="text-center text-gray-400">Loading content for ${sectionTitle}...</p>`;
     }
@@ -173,24 +195,27 @@ function loadSectionContent(sectionId) {
     }
 
     // NEW PATH: artifacts/{projectId}/publicWikiContent/{sectionId}
+    // NEUER PFAD: artifacts/{projectId}/publicWikiContent/{sectionId}
     const contentRef = doc(db, `artifacts/${projectId}/publicWikiContent`, sectionId);
 
     // Set up a real-time listener
+    // Einen Echtzeit-Listener einrichten
     sectionUnsubscribeListeners[sectionId] = onSnapshot(contentRef, (docSnap) => {
         if (docSnap.exists()) {
             const data = docSnap.data();
             const markdownContent = data.content || '';
             if (contentInput) {
-                contentInput.value = markdownContent; // Populate textarea
+                contentInput.value = markdownContent; // Textbereich füllen
             }
             if (contentDisplay) {
                 // Render Markdown to HTML
+                // Markdown in HTML rendern
                 contentDisplay.innerHTML = marked.parse(markdownContent);
             }
             console.log(`Content loaded for section: ${sectionId}`);
         } else {
             if (contentInput) {
-                contentInput.value = ''; // Clear textarea if no content
+                contentInput.value = ''; // Textbereich leeren, wenn kein Inhalt vorhanden ist
             }
             if (contentDisplay) {
                 contentDisplay.innerHTML = `<p class="text-center text-gray-400">No content saved for ${sectionTitle} yet. Click 'Edit' to start writing!</p>`;
@@ -208,9 +233,10 @@ function loadSectionContent(sectionId) {
 }
 
 // Function to toggle the visibility of the editor area for a given section
+// Funktion zum Umschalten der Sichtbarkeit des Editorbereichs für einen bestimmten Abschnitt
 function toggleEditorVisibility(sectionId) {
     const editorArea = document.querySelector(`.editor-area[data-section="${sectionId}"]`);
     if (editorArea) {
-        editorArea.classList.toggle('hidden'); // Toggle the 'hidden' class
+        editorArea.classList.toggle('hidden'); // Die Klasse 'hidden' umschalten
     }
 }
