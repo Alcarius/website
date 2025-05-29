@@ -3,27 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Campaign Wiki - Wikipedia Style</title>
+    <title>Dungeon of the Mad Mage Wiki</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        /* Custom styles to enhance the fantasy theme */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Cinzel:wght@400;700&display=swap');
+        /* Custom styles to enhance the fantastical medieval dungeon theme */
+        @import url('https://fonts.googleapis.com/css2?family=Spectral:wght@400;700&family=Cinzel+Decorative:wght@400;700&display=swap');
 
         body {
-            font-family: 'Inter', sans-serif; /* Default font */
-            background-color: #1a202c; /* Dark background for a mystic feel */
-            color: #e2e8f0; /* Light text color */
-            line-height: 1.6;
-            background-image: url('assets/images/parchment-texture.png'); /* Optional: Add a subtle parchment texture */
+            font-family: 'Spectral', serif; /* A more traditional, readable serif font for body text */
+            background-color: #1a1a1a; /* Very dark grey, like deep stone */
+            color: #e0e0e0; /* Brighter, more readable light grey for text */
+            line-height: 1.8; /* Increased line height for better readability */
+            /* Thematic background image: a dark, mysterious dungeon entrance or cavern */
+            background-image: url('https://placehold.co/1920x1080/1a1a1a/2d2d2d?text=Ancient+Dungeon+Cavern+Entrance');
             background-size: cover;
             background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-position: center center;
         }
 
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Cinzel', serif; /* A more thematic font for headings */
-            color: #fbd38d; /* Golden color for headings */
+            font-family: 'Cinzel Decorative', serif; /* A more ornate, impactful font for headings */
+            color: #b8860b; /* Dark goldenrod, like aged bronze or dull gold */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9); /* Stronger shadow for more depth */
+        }
+
+        h1 {
+            font-size: 3.5rem; /* Larger main title */
+        }
+        h2 {
+            font-size: 2.5rem; /* Larger section titles */
+        }
+        h3 {
+            font-size: 2rem; /* Larger sub-headings */
         }
 
         /* Custom scrollbar for a themed look */
@@ -32,18 +46,18 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #2d3748; /* Darker track */
+            background: #2d2d2d; /* Darker stone track */
             border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #4a5568; /* Scrollbar thumb color */
+            background: #555555; /* Scrollbar thumb color, like rough stone */
             border-radius: 10px;
-            border: 3px solid #2d3748; /* Border around thumb */
+            border: 3px solid #2d2d2d; /* Border around thumb */
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #6a768c; /* Lighter on hover */
+            background: #777777; /* Lighter on hover */
         }
 
         /* Styling for the custom message box */
@@ -66,19 +80,23 @@
         }
 
         /* Styling for Markdown rendered content */
+        .content-display {
+            font-size: 1.1rem; /* Slightly larger base font size for content */
+            padding: 1.5rem; /* Increased padding for more breathing room */
+        }
         .content-display h1, .content-display h2, .content-display h3, .content-display h4, .content-display h5, .content-display h6 {
-            color: #fbd38d; /* Headings in rendered Markdown */
-            font-family: 'Cinzel', serif;
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
+            color: #b8860b; /* Headings in rendered Markdown */
+            font-family: 'Cinzel Decorative', serif;
+            margin-top: 1.8em; /* More space above headings */
+            margin-bottom: 0.8em; /* More space below headings */
         }
         .content-display p {
-            margin-bottom: 1em;
+            margin-bottom: 1.2em; /* More space between paragraphs */
         }
         .content-display ul, .content-display ol {
-            list-style-position: inside;
-            margin-left: 1.5em;
-            margin-bottom: 1em;
+            list-style-position: outside; /* Changed to outside for better indentation */
+            margin-left: 2.5em; /* Increased indentation */
+            margin-bottom: 1.2em;
         }
         .content-display ul {
             list-style-type: disc;
@@ -87,159 +105,221 @@
             list-style-type: decimal;
         }
         .content-display a {
-            color: #a7f3d0; /* Link color in rendered Markdown */
+            color: #87ceeb; /* Lighter blue for links, like faint magic glow */
             text-decoration: underline;
         }
         .content-display strong {
             font-weight: bold;
-            color: #fbd38d;
+            color: #d4af37; /* Brighter gold for emphasis */
         }
         .content-display em {
             font-style: italic;
-            color: #cbd5e0;
+            color: #c0c0c0;
         }
         .content-display pre {
-            background-color: #2d3748;
-            padding: 1em;
+            background-color: #2d2d2d; /* Darker background for code blocks */
+            padding: 1.2em; /* Increased padding */
             border-radius: 5px;
             overflow-x: auto;
-            margin-bottom: 1em;
+            margin-bottom: 1.2em;
+            border: 1px solid #555555; /* Stone-like border */
         }
         .content-display code {
             font-family: 'Fira Code', monospace; /* A monospace font for code */
             color: #81e6d9;
+        }
+
+        /* Adjusting main container backgrounds and borders to fit theme */
+        .bg-gray-800 {
+            background-color: #2d2d2d; /* Dark stone-like background */
+        }
+        .bg-opacity-90 {
+            opacity: 0.95; /* Slightly less opaque to show background texture */
+        }
+        .border-gray-700 {
+            border-color: #555555; /* Darker, rugged border */
+        }
+        .bg-gray-700 {
+            background-color: #3a3a3a; /* Slightly lighter stone for sections */
+        }
+        .bg-gray-900 {
+            background-color: #1f1f1f; /* Even darker for content display */
+        }
+
+        /* Button styling adjustments */
+        .bg-blue-600 {
+            background-color: #36454F; /* Charcoal grey for Edit button */
+        }
+        .hover:bg-blue-700:hover {
+            background-color: #4a5a6a; /* Lighter charcoal on hover */
+        }
+        .bg-yellow-600 {
+            background-color: #8B4513; /* SaddleBrown, like aged leather or wood */
+        }
+        .hover:bg-yellow-700:hover {
+            background-color: #A0522D; /* Sienna, slightly lighter on hover */
         }
     </style>
 </head>
 <body class="antialiased">
     <div class="min-h-screen flex flex-col items-center p-4">
         <header class="w-full max-w-6xl bg-gray-800 bg-opacity-90 rounded-lg shadow-xl p-6 mb-8 border border-gray-700">
-            <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
-                <h1 class="text-4xl font-bold text-center md:text-left mb-4 md:mb-0">The Whispering Isles Wiki</h1>
-                <div id="user-id-display" class="text-sm text-gray-400 mt-2 md:mt-0"></div>
-                <nav>
-                    <ul class="flex flex-wrap justify-center md:justify-end space-x-4">
-                        <li><a href="#section-introduction" class="text-lg font-semibold text-yellow-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md bg-gray-700 bg-opacity-70">Introduction</a></li>
-                        <li><a href="#section-locations" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Locations</a></li>
-                        <li><a href="#section-npcs" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">NPCs</a></li>
-                        <li><a href="#section-factions" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Factions</a></li>
-                        <li><a href="#section-lore" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Lore</a></li>
-                        <li><a href="#section-quests" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Quests</a></li>
-                        <li><a href="#section-house_rules" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">House Rules</a></li>
-                    </ul>
-                </nav>
+            <div class="container mx-auto flex flex-col items-center">
+                <h1 class="text-4xl font-bold text-center">Dungeon of the Mad Mage Wiki</h1>
             </div>
         </header>
 
         <main class="w-full max-w-6xl bg-gray-800 bg-opacity-90 rounded-lg shadow-xl p-8 border border-gray-700 mb-8">
 
             <section id="section-introduction" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
-                <h2 class="text-3xl font-semibold mb-4 text-center">Campaign Introduction</h2>
-                <div class="mb-4">
-                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="introduction" rows="10" placeholder="Write your campaign introduction here using Markdown..."></textarea>
-                </div>
-                <div class="text-center mb-6">
-                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="introduction">
-                        Save Introduction
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-3xl font-semibold">Campaign Introduction</h2>
+                    <button class="edit-button bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="introduction">
+                        Edit
                     </button>
                 </div>
-                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="editor-area hidden" data-section="introduction">
+                    <div class="mb-4">
+                        <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="introduction" rows="10" placeholder="Write your campaign introduction here using Markdown..."></textarea>
+                    </div>
+                    <div class="text-center mb-6">
+                        <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="introduction">
+                            Save Introduction
+                        </button>
+                    </div>
+                </div>
                 <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="introduction">
                     <p class="text-center text-gray-400">Loading introduction content...</p>
                 </div>
             </section>
 
             <section id="section-locations" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
-                <h2 class="text-3xl font-semibold mb-4 text-center">Locations</h2>
-                <div class="mb-4">
-                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="locations" rows="10" placeholder="Describe your campaign locations here using Markdown..."></textarea>
-                </div>
-                <div class="text-center mb-6">
-                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="locations">
-                        Save Locations
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-3xl font-semibold">Locations</h2>
+                    <button class="edit-button bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="locations">
+                        Edit
                     </button>
                 </div>
-                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="editor-area hidden" data-section="locations">
+                    <div class="mb-4">
+                        <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="locations" rows="10" placeholder="Describe your campaign locations here using Markdown..."></textarea>
+                    </div>
+                    <div class="text-center mb-6">
+                        <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="locations">
+                            Save Locations
+                        </button>
+                    </div>
+                </div>
                 <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="locations">
                     <p class="text-center text-gray-400">Loading locations content...</p>
                 </div>
             </section>
 
             <section id="section-npcs" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
-                <h2 class="text-3xl font-semibold mb-4 text-center">NPCs</h2>
-                <div class="mb-4">
-                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="npcs" rows="10" placeholder="List your Non-Player Characters here using Markdown..."></textarea>
-                </div>
-                <div class="text-center mb-6">
-                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="npcs">
-                        Save NPCs
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-3xl font-semibold">NPCs</h2>
+                    <button class="edit-button bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="npcs">
+                        Edit
                     </button>
                 </div>
-                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="editor-area hidden" data-section="npcs">
+                    <div class="mb-4">
+                        <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="npcs" rows="10" placeholder="List your Non-Player Characters here using Markdown..."></textarea>
+                    </div>
+                    <div class="text-center mb-6">
+                        <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="npcs">
+                            Save NPCs
+                        </button>
+                    </div>
+                </div>
                 <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="npcs">
                     <p class="text-center text-gray-400">Loading NPCs content...</p>
                 </div>
             </section>
 
             <section id="section-factions" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
-                <h2 class="text-3xl font-semibold mb-4 text-center">Factions</h2>
-                <div class="mb-4">
-                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="factions" rows="10" placeholder="Detail the factions in your campaign using Markdown..."></textarea>
-                </div>
-                <div class="text-center mb-6">
-                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="factions">
-                        Save Factions
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-3xl font-semibold">Factions</h2>
+                    <button class="edit-button bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="factions">
+                        Edit
                     </button>
                 </div>
-                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="editor-area hidden" data-section="factions">
+                    <div class="mb-4">
+                        <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="factions" rows="10" placeholder="Detail the factions in your campaign using Markdown..."></textarea>
+                    </div>
+                    <div class="text-center mb-6">
+                        <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="factions">
+                            Save Factions
+                        </button>
+                    </div>
+                </div>
                 <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="factions">
                     <p class="text-center text-gray-400">Loading factions content...</p>
                 </div>
             </section>
 
             <section id="section-lore" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
-                <h2 class="text-3xl font-semibold mb-4 text-center">Lore</h2>
-                <div class="mb-4">
-                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="lore" rows="10" placeholder="Uncover the deep lore of your world using Markdown..."></textarea>
-                </div>
-                <div class="text-center mb-6">
-                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="lore">
-                        Save Lore
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-3xl font-semibold">Lore </h2>
+                    <button class="edit-button bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="lore">
+                        Edit
                     </button>
                 </div>
-                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="editor-area hidden" data-section="lore">
+                    <div class="mb-4">
+                        <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="lore" rows="10" placeholder="Uncover the deep lore of your world using Markdown..."></textarea>
+                    </div>
+                    <div class="text-center mb-6">
+                        <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="lore">
+                            Save Lore
+                        </button>
+                    </div>
+                </div>
                 <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="lore">
                     <p class="text-center text-gray-400">Loading lore content...</p>
                 </div>
             </section>
 
             <section id="section-quests" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
-                <h2 class="text-3xl font-semibold mb-4 text-center">Quests</h2>
-                <div class="mb-4">
-                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="quests" rows="10" placeholder="Outline your campaign quests here using Markdown..."></textarea>
-                </div>
-                <div class="text-center mb-6">
-                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="quests">
-                        Save Quests
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-3xl font-semibold">Quests</h2>
+                    <button class="edit-button bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="quests">
+                        Edit
                     </button>
                 </div>
-                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="editor-area hidden" data-section="quests">
+                    <div class="mb-4">
+                        <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="quests" rows="10" placeholder="Outline your campaign quests here using Markdown..."></textarea>
+                    </div>
+                    <div class="text-center mb-6">
+                        <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="quests">
+                            Save Quests
+                        </button>
+                    </div>
+                </div>
                 <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="quests">
                     <p class="text-center text-gray-400">Loading quests content...</p>
                 </div>
             </section>
 
             <section id="section-house_rules" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
-                <h2 class="text-3xl font-semibold mb-4 text-center">House Rules</h2>
-                <div class="mb-4">
-                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="house_rules" rows="10" placeholder="Document your house rules and mechanics using Markdown..."></textarea>
-                </div>
-                <div class="text-center mb-6">
-                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="house_rules">
-                        Save House Rules
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-3xl font-semibold">House Rules</h2>
+                    <button class="edit-button bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="house_rules">
+                        Edit
                     </button>
                 </div>
-                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="editor-area hidden" data-section="house_rules">
+                    <div class="mb-4">
+                        <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="house_rules" rows="10" placeholder="Document your house rules and mechanics using Markdown..."></textarea>
+                    </div>
+                    <div class="text-center mb-6">
+                        <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="house_rules">
+                            Save House Rules
+                        </button>
+                    </div>
+                </div>
                 <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="house_rules">
                     <p class="text-center text-gray-400">Loading house rules content...</p>
                 </div>
