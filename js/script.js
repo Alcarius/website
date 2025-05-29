@@ -1,11 +1,24 @@
 // Import Firebase modules
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+// Ensure all necessary modules are imported here, not just initializeApp
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
-// Global variables for Firebase (provided by the Canvas environment)
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+// Your web app's Firebase configuration - DIRECTLY EMBEDDED HERE
+const firebaseConfig = {
+    apiKey: "AIzaSyADwTnw2J5C9BpWPJsDhsHBHbkVckm6HjU",
+    authDomain: "dndwiki-fb2a5.firebaseapp.com",
+    projectId: "dndwiki-fb2a5",
+    storageBucket: "dndwiki-fb2a5.firebasestorage.app",
+    messagingSenderId: "978113723224",
+    appId: "1:978113723224:web:c87a0d32698207f87e432d"
+};
+
+// You can still use a variable for appId for Firestore paths if needed,
+// extracting it directly from the firebaseConfig
+const appId = firebaseConfig.appId;
+
+// The __initial_auth_token is still expected from the Canvas environment for authentication
 const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
 let app;
@@ -46,6 +59,7 @@ function showMessageBox(message, type = 'success') {
 // Initialize Firebase and set up authentication
 window.onload = async function () {
     try {
+        // Initialize Firebase with the directly embedded config
         app = initializeApp(firebaseConfig);
         db = getFirestore(app);
         auth = getAuth(app);
