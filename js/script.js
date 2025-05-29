@@ -1,5 +1,4 @@
 // Import Firebase modules
-// Ensure all necessary modules are imported here, not just initializeApp
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
@@ -16,7 +15,7 @@ const firebaseConfig = {
 
 // You can still use a variable for appId for Firestore paths if needed,
 // extracting it directly from the firebaseConfig
-const appId = firebaseConfig.appId;
+const appId = firebaseConfig.appId; // This is used in the path to keep it unique per app/project
 
 // The __initial_auth_token is still expected from the Canvas environment for authentication
 const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
@@ -24,7 +23,7 @@ const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial
 let app;
 let db;
 let auth;
-let currentUserId = null;
+let currentUserId = null; // We still authenticate for logging purposes, but data path is public now
 
 // Define the sections for the wiki
 const wikiSections = [
@@ -67,15 +66,13 @@ window.onload = async function () {
         // Set the current year in the footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        // Listen for authentication state changes
+        // Listen for authentication state changes (still useful for logging/analytics)
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 // User is signed in
                 currentUserId = user.uid;
                 console.log("User signed in successfully. User ID:", currentUserId);
                 document.getElementById('user-id-display').textContent = `User ID: ${currentUserId}`;
-                // Once authenticated, load content for all sections
-                loadAllSectionsContent();
             } else {
                 // User is signed out
                 console.log("User is currently signed out. Attempting anonymous sign-in or custom token sign-in...");
@@ -85,7 +82,7 @@ window.onload = async function () {
                         await signInWithCustomToken(auth, initialAuthToken);
                         console.log("Attempted sign-in with custom token.");
                     } else {
-                        await signInAnonymously(auth);
+                        await signInAnonymously(auth); // Still try anonymous sign-in even if not strictly needed for access
                         console.log("Attempted anonymous sign-in.");
                     }
                 } catch (error) {
@@ -93,6 +90,8 @@ window.onload = async function () {
                     showMessageBox("Authentication failed. Please check console for details.", "error");
                 }
             }
+            // Load content for all sections regardless of auth status, since rules will be public
+            loadAllSectionsContent();
         });
 
         // Add event listeners for all save buttons
@@ -120,21 +119,23 @@ function loadAllSectionsContent() {
 
 // Function to save content for a specific section to Firestore
 async function saveSectionContent(sectionId) {
-    if (!currentUserId) {
-        console.error("Save failed: currentUserId is null. Authentication not complete.");
-        showMessageBox("Authentication not ready. Please wait for user ID to appear.", "error");
-        return;
+    // No need to check currentUserId if rules allow public write
+    // But we will log it if available for debugging
+    console.log(`Attempting to save content for section: ${sectionId}`);
+    if (currentUserId) {
+        console.log(`Authenticated as User ID: ${currentUserId}`);
+    } else {
+        console.log("Saving as unauthenticated user.");
     }
 
-    const contentInput = document.querySelector(`.content-input[data-section="${sectionId}"]`).value;
-    // Document path: artifacts/{appId}/users/{currentUserId}/wikiContent/{sectionId}
-    const contentRef = doc(db, `artifacts/${appId}/users/${currentUserId}/wikiContent`, sectionId);
 
-    console.log(`Attempting to save content for section: ${sectionId} with User ID: ${currentUserId}`);
+    const contentInput = document.querySelector(`.content-input[data-section="${sectionId}"]`).value;
+    // NEW PATH: artifacts/{appId}/publicWikiContent/{sectionId}
+    const contentRef = doc(db, `artifacts/${appId}/publicWikiContent`, sectionId);
+
     try {
         await setDoc(contentRef, { content: contentInput });
-        console.log(`Content for ${sectionId} saved successfully!`);
-        // Find the title for the message box
+        console.log(`Content for ${sectionId} saved successfully to publicWikiContent!`);
         const sectionTitle = wikiSections.find(s => s.id === sectionId)?.title || sectionId;
         showMessageBox(`Content for ${sectionTitle} saved!`);
     } catch (error) {
@@ -146,21 +147,16 @@ async function saveSectionContent(sectionId) {
 
 // Function to load content for a specific section from Firestore using onSnapshot
 function loadSectionContent(sectionId) {
-    if (!currentUserId) {
-        console.log(`Cannot load content for ${sectionId}: User not authenticated yet. Skipping load.`);
-        return;
-    }
+    // No need to check currentUserId if rules allow public read
+    const contentInput = document.querySelector(`.content-input[data-section="${sectionId}"]`);
+    const contentDisplay = document.querySelector(`.content-display[data-section="${sectionId}"]`);
+    const sectionTitle = wikiSections.find(s => s.id === sectionId)?.title || sectionId;
 
     // Unsubscribe from previous listener for this section if it exists
     if (sectionUnsubscribeListeners[sectionId]) {
         sectionUnsubscribeListeners[sectionId]();
         console.log(`Unsubscribed from previous snapshot listener for section: ${sectionId}`);
     }
-
-    const contentInput = document.querySelector(`.content-input[data-section="${sectionId}"]`);
-    const contentDisplay = document.querySelector(`.content-display[data-section="${sectionId}"]`);
-    const sectionTitle = wikiSections.find(s => s.id === sectionId)?.title || sectionId;
-
 
     // Set initial loading state
     if (contentDisplay) {
@@ -170,7 +166,8 @@ function loadSectionContent(sectionId) {
         contentInput.value = '';
     }
 
-    const contentRef = doc(db, `artifacts/${appId}/users/${currentUserId}/wikiContent`, sectionId);
+    // NEW PATH: artifacts/{appId}/publicWikiContent/{sectionId}
+    const contentRef = doc(db, `artifacts/${appId}/publicWikiContent`, sectionId);
 
     // Set up a real-time listener
     sectionUnsubscribeListeners[sectionId] = onSnapshot(contentRef, (docSnap) => {
