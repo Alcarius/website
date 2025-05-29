@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Campaign Wiki - Homepage</title>
+    <title>Your Campaign Wiki - Wikipedia Style</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         /* Custom styles to enhance the fantasy theme */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Cinzel:wght@400;700&display=swap');
@@ -44,53 +45,216 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #6a768c; /* Lighter on hover */
         }
+
+        /* Styling for the custom message box */
+        .message-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .message-box.show {
+            opacity: 1;
+        }
+
+        /* Styling for Markdown rendered content */
+        .content-display h1, .content-display h2, .content-display h3, .content-display h4, .content-display h5, .content-display h6 {
+            color: #fbd38d; /* Headings in rendered Markdown */
+            font-family: 'Cinzel', serif;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        .content-display p {
+            margin-bottom: 1em;
+        }
+        .content-display ul, .content-display ol {
+            list-style-position: inside;
+            margin-left: 1.5em;
+            margin-bottom: 1em;
+        }
+        .content-display ul {
+            list-style-type: disc;
+        }
+        .content-display ol {
+            list-style-type: decimal;
+        }
+        .content-display a {
+            color: #a7f3d0; /* Link color in rendered Markdown */
+            text-decoration: underline;
+        }
+        .content-display strong {
+            font-weight: bold;
+            color: #fbd38d;
+        }
+        .content-display em {
+            font-style: italic;
+            color: #cbd5e0;
+        }
+        .content-display pre {
+            background-color: #2d3748;
+            padding: 1em;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-bottom: 1em;
+        }
+        .content-display code {
+            font-family: 'Fira Code', monospace; /* A monospace font for code */
+            color: #81e6d9;
+        }
     </style>
 </head>
 <body class="antialiased">
-    <div class="min-h-screen flex flex-col items-center justify-center p-4">
-        <header class="w-full max-w-4xl bg-gray-800 bg-opacity-90 rounded-lg shadow-xl p-6 mb-8 border border-gray-700">
+    <div class="min-h-screen flex flex-col items-center p-4">
+        <header class="w-full max-w-6xl bg-gray-800 bg-opacity-90 rounded-lg shadow-xl p-6 mb-8 border border-gray-700">
             <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
-                <h1 class="text-4xl font-bold text-center md:text-left mb-4 md:mb-0">The Whispering Isles Campaign</h1>
+                <h1 class="text-4xl font-bold text-center md:text-left mb-4 md:mb-0">The Whispering Isles Wiki</h1>
+                <div id="user-id-display" class="text-sm text-gray-400 mt-2 md:mt-0"></div>
                 <nav>
                     <ul class="flex flex-wrap justify-center md:justify-end space-x-4">
-                        <li><a href="index.html" class="text-lg font-semibold text-yellow-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md bg-gray-700 bg-opacity-70">Home</a></li>
-                        <li><a href="sitemap.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Sitemap</a></li>
-                        <li><a href="pages/locations.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Locations</a></li>
-                        <li><a href="pages/npcs.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">NPCs</a></li>
-                        <li><a href="pages/factions.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Factions</a></li>
-                        <li><a href="pages/lore.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Lore</a></li>
-                        <li><a href="pages/quests.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Quests</a></li>
-                        <li><a href="pages/house_rules.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">House Rules</a></li>
+                        <li><a href="#section-introduction" class="text-lg font-semibold text-yellow-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md bg-gray-700 bg-opacity-70">Introduction</a></li>
+                        <li><a href="#section-locations" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Locations</a></li>
+                        <li><a href="#section-npcs" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">NPCs</a></li>
+                        <li><a href="#section-factions" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Factions</a></li>
+                        <li><a href="#section-lore" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Lore</a></li>
+                        <li><a href="#section-quests" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Quests</a></li>
+                        <li><a href="#section-house_rules" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">House Rules</a></li>
                     </ul>
                 </nav>
             </div>
         </header>
 
-        <main class="w-full max-w-4xl bg-gray-800 bg-opacity-90 rounded-lg shadow-xl p-8 border border-gray-700">
-            <section class="campaign-introduction">
-                <h2 class="text-3xl font-semibold mb-6 text-center">Welcome, Adventurer, to the Whispering Isles!</h2>
-                <p class="text-gray-300 mb-4 text-justify">
-                    Beyond the known continents, shrouded in mist and legend, lie the Whispering Isles – a scattered archipelago of ancient ruins, untamed wilderness, and hidden secrets. For centuries, these islands have been a beacon for explorers, treasure hunters, and those seeking refuge from the empires of the mainland. But beneath their verdant surface, a forgotten power stirs, threatening to unravel the delicate balance of magic and nature.
-                </p>
-                <p class="text-gray-300 mb-4 text-justify">
-                    This wiki serves as your guide to the campaign world of the Whispering Isles. Here, you will find detailed information on the diverse <a href="pages/locations.html" class="text-yellow-400 hover:text-yellow-200 underline">locations</a>, the intriguing <a href="pages/npcs.html" class="text-yellow-400 hover:text-yellow-200 underline">Non-Player Characters</a> who inhabit them, the powerful <a href="pages/factions.html" class="text-yellow-400 hover:text-yellow-200 underline">factions</a> vying for control, and the deep <a href="pages/lore.html" class="text-yellow-400 hover:text-yellow-200 underline">lore</a> that shapes this realm. Prepare to embark on thrilling <a href="pages/quests.html" class="text-yellow-400 hover:text-yellow-200 underline">quests</a> and uncover mysteries that will test your courage and wit.
-                </p>
-                <p class="text-gray-300 text-justify">
-                    Whether you are a seasoned veteran of countless campaigns or a newcomer to the world of tabletop roleplaying, this wiki is designed to enhance your experience. Dive in, explore, and let your imagination soar as you delve into the heart of the Whispering Isles. Remember to consult the <a href="pages/house_rules.html" class="text-yellow-400 hover:text-yellow-200 underline">House Rules</a> for specific campaign adjustments.
-                </p>
-                <div class="mt-8 text-center">
-                    <img src="https://placehold.co/600x300/334155/E2E8F0?text=Map+of+Whispering+Isles" alt="Placeholder map of Whispering Isles" class="rounded-lg shadow-lg mx-auto border border-gray-600">
-                    <p class="text-sm text-gray-400 mt-2">A glimpse into the mysterious Whispering Isles.</p>
+        <main class="w-full max-w-6xl bg-gray-800 bg-opacity-90 rounded-lg shadow-xl p-8 border border-gray-700 mb-8">
+
+            <section id="section-introduction" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
+                <h2 class="text-3xl font-semibold mb-4 text-center">Campaign Introduction</h2>
+                <div class="mb-4">
+                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="introduction" rows="10" placeholder="Write your campaign introduction here using Markdown..."></textarea>
+                </div>
+                <div class="text-center mb-6">
+                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="introduction">
+                        Save Introduction
+                    </button>
+                </div>
+                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="introduction">
+                    <p class="text-center text-gray-400">Loading introduction content...</p>
                 </div>
             </section>
+
+            <section id="section-locations" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
+                <h2 class="text-3xl font-semibold mb-4 text-center">Locations</h2>
+                <div class="mb-4">
+                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="locations" rows="10" placeholder="Describe your campaign locations here using Markdown..."></textarea>
+                </div>
+                <div class="text-center mb-6">
+                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="locations">
+                        Save Locations
+                    </button>
+                </div>
+                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="locations">
+                    <p class="text-center text-gray-400">Loading locations content...</p>
+                </div>
+            </section>
+
+            <section id="section-npcs" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
+                <h2 class="text-3xl font-semibold mb-4 text-center">NPCs</h2>
+                <div class="mb-4">
+                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="npcs" rows="10" placeholder="List your Non-Player Characters here using Markdown..."></textarea>
+                </div>
+                <div class="text-center mb-6">
+                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="npcs">
+                        Save NPCs
+                    </button>
+                </div>
+                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="npcs">
+                    <p class="text-center text-gray-400">Loading NPCs content...</p>
+                </div>
+            </section>
+
+            <section id="section-factions" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
+                <h2 class="text-3xl font-semibold mb-4 text-center">Factions</h2>
+                <div class="mb-4">
+                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="factions" rows="10" placeholder="Detail the factions in your campaign using Markdown..."></textarea>
+                </div>
+                <div class="text-center mb-6">
+                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="factions">
+                        Save Factions
+                    </button>
+                </div>
+                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="factions">
+                    <p class="text-center text-gray-400">Loading factions content...</p>
+                </div>
+            </section>
+
+            <section id="section-lore" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
+                <h2 class="text-3xl font-semibold mb-4 text-center">Lore</h2>
+                <div class="mb-4">
+                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="lore" rows="10" placeholder="Uncover the deep lore of your world using Markdown..."></textarea>
+                </div>
+                <div class="text-center mb-6">
+                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="lore">
+                        Save Lore
+                    </button>
+                </div>
+                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="lore">
+                    <p class="text-center text-gray-400">Loading lore content...</p>
+                </div>
+            </section>
+
+            <section id="section-quests" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
+                <h2 class="text-3xl font-semibold mb-4 text-center">Quests</h2>
+                <div class="mb-4">
+                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="quests" rows="10" placeholder="Outline your campaign quests here using Markdown..."></textarea>
+                </div>
+                <div class="text-center mb-6">
+                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="quests">
+                        Save Quests
+                    </button>
+                </div>
+                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="quests">
+                    <p class="text-center text-gray-400">Loading quests content...</p>
+                </div>
+            </section>
+
+            <section id="section-house_rules" class="wiki-section mb-12 p-6 rounded-lg border border-gray-700 bg-gray-700 bg-opacity-50">
+                <h2 class="text-3xl font-semibold mb-4 text-center">House Rules</h2>
+                <div class="mb-4">
+                    <textarea class="content-input w-full p-4 rounded-md bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500" data-section="house_rules" rows="10" placeholder="Document your house rules and mechanics using Markdown..."></textarea>
+                </div>
+                <div class="text-center mb-6">
+                    <button class="save-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" data-section="house_rules">
+                        Save House Rules
+                    </button>
+                </div>
+                <h3 class="text-2xl font-semibold mb-4">Rendered Content:</h3>
+                <div class="content-display bg-gray-900 bg-opacity-70 p-6 rounded-lg border border-gray-600 whitespace-pre-wrap text-gray-300 min-h-[150px]" data-section="house_rules">
+                    <p class="text-center text-gray-400">Loading house rules content...</p>
+                </div>
+            </section>
+
         </main>
 
-        <footer class="w-full max-w-4xl bg-gray-800 bg-opacity-90 rounded-lg shadow-xl p-4 mt-8 border border-gray-700 text-center text-gray-400 text-sm">
+        <footer class="w-full max-w-6xl bg-gray-800 bg-opacity-90 rounded-lg shadow-xl p-4 mt-8 border border-gray-700 text-center text-gray-400 text-sm">
             <p>&copy; <span id="current-year"></span> Your Campaign Wiki. All rights reserved.</p>
             <p class="mt-2">Created for adventurers by adventurers.</p>
         </footer>
     </div>
 
-    <script src="js/script.js"></script>
+    <div id="message-box" class="message-box"></div>
+
+    <script type="module" src="js/script.js"></script>
 </body>
 </html>
