@@ -1,95 +1,96 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine Persönliche Website</title>
+    <title>Your Campaign Wiki - Homepage</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Hier kannst du dein CSS hinzufügen */
+        /* Custom styles to enhance the fantasy theme */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Cinzel:wght@400;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', sans-serif; /* Default font */
+            background-color: #1a202c; /* Dark background for a mystic feel */
+            color: #e2e8f0; /* Light text color */
             line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-            color: #333;
+            background-image: url('assets/images/parchment-texture.png'); /* Optional: Add a subtle parchment texture */
+            background-size: cover;
+            background-attachment: fixed;
         }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 1rem 0;
-            text-align: center;
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cinzel', serif; /* A more thematic font for headings */
+            color: #fbd38d; /* Golden color for headings */
         }
-        nav ul {
-            padding: 0;
-            list-style: none;
+
+        /* Custom scrollbar for a themed look */
+        ::-webkit-scrollbar {
+            width: 12px;
         }
-        nav ul li {
-            display: inline;
-            margin-right: 20px;
+
+        ::-webkit-scrollbar-track {
+            background: #2d3748; /* Darker track */
+            border-radius: 10px;
         }
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
+
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568; /* Scrollbar thumb color */
+            border-radius: 10px;
+            border: 3px solid #2d3748; /* Border around thumb */
         }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
-            color: #666;
-            font-size: 0.9em;
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6a768c; /* Lighter on hover */
         }
     </style>
 </head>
-<body>
-    <header>
-        <h1>Willkommen auf meiner Website!</h1>
-        <nav>
-            <ul>
-                <li><a href="#about">Über mich</a></li>
-                <li><a href="#projects">Projekte</a></li>
-                <li><a href="#contact">Kontakt</a></li>
-            </ul>
-        </nav>
-    </header>
+<body class="antialiased">
+    <div class="min-h-screen flex flex-col items-center justify-center p-4">
+        <header class="w-full max-w-4xl bg-gray-800 bg-opacity-90 rounded-lg shadow-xl p-6 mb-8 border border-gray-700">
+            <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+                <h1 class="text-4xl font-bold text-center md:text-left mb-4 md:mb-0">The Whispering Isles Campaign</h1>
+                <nav>
+                    <ul class="flex flex-wrap justify-center md:justify-end space-x-4">
+                        <li><a href="index.html" class="text-lg font-semibold text-yellow-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md bg-gray-700 bg-opacity-70">Home</a></li>
+                        <li><a href="sitemap.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Sitemap</a></li>
+                        <li><a href="pages/locations.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Locations</a></li>
+                        <li><a href="pages/npcs.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">NPCs</a></li>
+                        <li><a href="pages/factions.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Factions</a></li>
+                        <li><a href="pages/lore.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Lore</a></li>
+                        <li><a href="pages/quests.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">Quests</a></li>
+                        <li><a href="pages/house_rules.html" class="text-lg font-semibold text-gray-300 hover:text-yellow-500 transition duration-300 ease-in-out px-3 py-2 rounded-md hover:bg-gray-700 hover:bg-opacity-70">House Rules</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
 
-    <div class="container">
-        <section id="about">
-            <h2>Über mich</h2>
-            <p>Hallo! Ich bin Arthur und dies ist meine persönliche Website. Hier teile ich Informationen über mich, meine Fähigkeiten und meine Projekte.</p>
-            <p>Ich bin ein begeisterter Programmierer und lerne gerne neue Technologien.</p>
-        </section>
+        <main class="w-full max-w-4xl bg-gray-800 bg-opacity-90 rounded-lg shadow-xl p-8 border border-gray-700">
+            <section class="campaign-introduction">
+                <h2 class="text-3xl font-semibold mb-6 text-center">Welcome, Adventurer, to the Whispering Isles!</h2>
+                <p class="text-gray-300 mb-4 text-justify">
+                    Beyond the known continents, shrouded in mist and legend, lie the Whispering Isles – a scattered archipelago of ancient ruins, untamed wilderness, and hidden secrets. For centuries, these islands have been a beacon for explorers, treasure hunters, and those seeking refuge from the empires of the mainland. But beneath their verdant surface, a forgotten power stirs, threatening to unravel the delicate balance of magic and nature.
+                </p>
+                <p class="text-gray-300 mb-4 text-justify">
+                    This wiki serves as your guide to the campaign world of the Whispering Isles. Here, you will find detailed information on the diverse <a href="pages/locations.html" class="text-yellow-400 hover:text-yellow-200 underline">locations</a>, the intriguing <a href="pages/npcs.html" class="text-yellow-400 hover:text-yellow-200 underline">Non-Player Characters</a> who inhabit them, the powerful <a href="pages/factions.html" class="text-yellow-400 hover:text-yellow-200 underline">factions</a> vying for control, and the deep <a href="pages/lore.html" class="text-yellow-400 hover:text-yellow-200 underline">lore</a> that shapes this realm. Prepare to embark on thrilling <a href="pages/quests.html" class="text-yellow-400 hover:text-yellow-200 underline">quests</a> and uncover mysteries that will test your courage and wit.
+                </p>
+                <p class="text-gray-300 text-justify">
+                    Whether you are a seasoned veteran of countless campaigns or a newcomer to the world of tabletop roleplaying, this wiki is designed to enhance your experience. Dive in, explore, and let your imagination soar as you delve into the heart of the Whispering Isles. Remember to consult the <a href="pages/house_rules.html" class="text-yellow-400 hover:text-yellow-200 underline">House Rules</a> for specific campaign adjustments.
+                </p>
+                <div class="mt-8 text-center">
+                    <img src="https://placehold.co/600x300/334155/E2E8F0?text=Map+of+Whispering+Isles" alt="Placeholder map of Whispering Isles" class="rounded-lg shadow-lg mx-auto border border-gray-600">
+                    <p class="text-sm text-gray-400 mt-2">A glimpse into the mysterious Whispering Isles.</p>
+                </div>
+            </section>
+        </main>
 
-        <hr> <section id="projects">
-            <h2>Meine Projekte</h2>
-            <p>Hier sind einige meiner aktuellen Projekte:</p>
-            <ul>
-                <li>**Projekt 1:** Eine kurze Beschreibung von Projekt 1.</li>
-                <li>**Projekt 2:** Eine kurze Beschreibung von Projekt 2.</li>
-                <li>**Projekt 3:** Eine kurze Beschreibung von Projekt 3.</li>
-            </ul>
-            <p>Mehr Projekte folgen bald!</p>
-        </section>
-
-        <hr>
-
-        <section id="contact">
-            <h2>Kontakt</h2>
-            <p>Du kannst mich gerne kontaktieren unter: [Deine E-Mail-Adresse] oder über LinkedIn.</p>
-        </section>
+        <footer class="w-full max-w-4xl bg-gray-800 bg-opacity-90 rounded-lg shadow-xl p-4 mt-8 border border-gray-700 text-center text-gray-400 text-sm">
+            <p>&copy; <span id="current-year"></span> Your Campaign Wiki. All rights reserved.</p>
+            <p class="mt-2">Created for adventurers by adventurers.</p>
+        </footer>
     </div>
 
-    <footer>
-        <p>&copy; 2025 [Dein Name]. Alle Rechte vorbehalten.</p>
-    </footer>
+    <script src="js/script.js"></script>
 </body>
 </html>
