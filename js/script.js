@@ -13,9 +13,8 @@ const firebaseConfig = {
     appId: "1:978113723224:web:c87a0d32698207f87e432d"
 };
 
-// You can still use a variable for appId for Firestore paths if needed,
-// extracting it directly from the firebaseConfig
-const appId = firebaseConfig.appId; // This is used in the path to keep it unique per app/project
+// Use projectId for Firestore paths as it's a clean string without special characters
+const projectId = firebaseConfig.projectId; // This is used in the path to keep it unique per project
 
 // The __initial_auth_token is still expected from the Canvas environment for authentication
 const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
@@ -72,11 +71,11 @@ window.onload = async function () {
                 // User is signed in
                 currentUserId = user.uid;
                 console.log("User signed in successfully. User ID:", currentUserId);
-                document.getElementById('user-id-display').textContent = `User ID: ${currentUserId}`;
+                // Removed: document.getElementById('user-id-display').textContent = `User ID: ${currentUserId}`;
             } else {
                 // User is signed out
                 console.log("User is currently signed out. Attempting anonymous sign-in or custom token sign-in...");
-                document.getElementById('user-id-display').textContent = `User ID: Not authenticated`;
+                // Removed: document.getElementById('user-id-display').textContent = `User ID: Not authenticated`;
                 try {
                     if (initialAuthToken) {
                         await signInWithCustomToken(auth, initialAuthToken);
@@ -103,6 +102,14 @@ window.onload = async function () {
             });
         });
 
+        // Add event listeners for all edit buttons
+        document.querySelectorAll('.edit-button').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const sectionId = event.target.dataset.section;
+                toggleEditorVisibility(sectionId);
+            });
+        });
+
     } catch (error) {
         console.error("Error initializing Firebase application:", error);
         showMessageBox("Failed to initialize the application. Check console for details.", "error");
@@ -119,8 +126,6 @@ function loadAllSectionsContent() {
 
 // Function to save content for a specific section to Firestore
 async function saveSectionContent(sectionId) {
-    // No need to check currentUserId if rules allow public write
-    // But we will log it if available for debugging
     console.log(`Attempting to save content for section: ${sectionId}`);
     if (currentUserId) {
         console.log(`Authenticated as User ID: ${currentUserId}`);
@@ -130,14 +135,15 @@ async function saveSectionContent(sectionId) {
 
 
     const contentInput = document.querySelector(`.content-input[data-section="${sectionId}"]`).value;
-    // NEW PATH: artifacts/{appId}/publicWikiContent/{sectionId}
-    const contentRef = doc(db, `artifacts/${appId}/publicWikiContent`, sectionId);
+    // NEW PATH: artifacts/{projectId}/publicWikiContent/{sectionId}
+    const contentRef = doc(db, `artifacts/${projectId}/publicWikiContent`, sectionId);
 
     try {
         await setDoc(contentRef, { content: contentInput });
         console.log(`Content for ${sectionId} saved successfully to publicWikiContent!`);
         const sectionTitle = wikiSections.find(s => s.id === sectionId)?.title || sectionId;
         showMessageBox(`Content for ${sectionTitle} saved!`);
+        toggleEditorVisibility(sectionId); // Hide editor after saving
     } catch (error) {
         console.error(`Error saving content for ${sectionId}:`, error);
         const sectionTitle = wikiSections.find(s => s.id === sectionId)?.title || sectionId;
@@ -166,8 +172,8 @@ function loadSectionContent(sectionId) {
         contentInput.value = '';
     }
 
-    // NEW PATH: artifacts/{appId}/publicWikiContent/{sectionId}
-    const contentRef = doc(db, `artifacts/${appId}/publicWikiContent`, sectionId);
+    // NEW PATH: artifacts/{projectId}/publicWikiContent/{sectionId}
+    const contentRef = doc(db, `artifacts/${projectId}/publicWikiContent`, sectionId);
 
     // Set up a real-time listener
     sectionUnsubscribeListeners[sectionId] = onSnapshot(contentRef, (docSnap) => {
@@ -187,7 +193,7 @@ function loadSectionContent(sectionId) {
                 contentInput.value = ''; // Clear textarea if no content
             }
             if (contentDisplay) {
-                contentDisplay.innerHTML = `<p class="text-center text-gray-400">No content saved for ${sectionTitle} yet. Start writing in the box above!</p>`;
+                contentDisplay.innerHTML = `<p class="text-center text-gray-400">No content saved for ${sectionTitle} yet. Click 'Edit' to start writing!</p>`;
             }
             console.log(`No document found for section: ${sectionId}`);
         }
@@ -199,4 +205,12 @@ function loadSectionContent(sectionId) {
         showMessageBox(`Error loading content for ${sectionTitle}.`, "error");
     });
     console.log(`Subscribed to snapshot listener for section: ${sectionId}`);
+}
+
+// Function to toggle the visibility of the editor area for a given section
+function toggleEditorVisibility(sectionId) {
+    const editorArea = document.querySelector(`.editor-area[data-section="${sectionId}"]`);
+    if (editorArea) {
+        editorArea.classList.toggle('hidden'); // Toggle the 'hidden' class
+    }
 }
