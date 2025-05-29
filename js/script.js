@@ -58,25 +58,25 @@ window.onload = async function () {
             if (user) {
                 // User is signed in
                 currentUserId = user.uid;
-                console.log("User signed in:", currentUserId);
+                console.log("User signed in successfully. User ID:", currentUserId);
                 document.getElementById('user-id-display').textContent = `User ID: ${currentUserId}`;
                 // Once authenticated, load content for all sections
                 loadAllSectionsContent();
             } else {
                 // User is signed out
-                console.log("User signed out. Attempting anonymous sign-in or custom token sign-in.");
+                console.log("User is currently signed out. Attempting anonymous sign-in or custom token sign-in...");
                 document.getElementById('user-id-display').textContent = `User ID: Not authenticated`;
                 try {
                     if (initialAuthToken) {
                         await signInWithCustomToken(auth, initialAuthToken);
-                        console.log("Signed in with custom token.");
+                        console.log("Attempted sign-in with custom token.");
                     } else {
                         await signInAnonymously(auth);
-                        console.log("Signed in anonymously.");
+                        console.log("Attempted anonymous sign-in.");
                     }
                 } catch (error) {
-                    console.error("Authentication failed:", error);
-                    showMessageBox("Authentication failed. Please try again.", "error");
+                    console.error("Authentication failed during sign-in attempt:", error);
+                    showMessageBox("Authentication failed. Please check console for details.", "error");
                 }
             }
         });
@@ -85,18 +85,20 @@ window.onload = async function () {
         document.querySelectorAll('.save-button').forEach(button => {
             button.addEventListener('click', (event) => {
                 const sectionId = event.target.dataset.section;
+                console.log(`Save button clicked for section: ${sectionId}`);
                 saveSectionContent(sectionId);
             });
         });
 
     } catch (error) {
-        console.error("Error initializing Firebase:", error);
+        console.error("Error initializing Firebase application:", error);
         showMessageBox("Failed to initialize the application. Check console for details.", "error");
     }
 };
 
 // Function to load content for all wiki sections
 function loadAllSectionsContent() {
+    console.log("Loading content for all wiki sections...");
     wikiSections.forEach(section => {
         loadSectionContent(section.id);
     });
@@ -105,14 +107,16 @@ function loadAllSectionsContent() {
 // Function to save content for a specific section to Firestore
 async function saveSectionContent(sectionId) {
     if (!currentUserId) {
-        showMessageBox("Authentication not ready. Please wait.", "error");
+        console.error("Save failed: currentUserId is null. Authentication not complete.");
+        showMessageBox("Authentication not ready. Please wait for user ID to appear.", "error");
         return;
     }
 
     const contentInput = document.querySelector(`.content-input[data-section="${sectionId}"]`).value;
-    // Document path: artifacts/{appId}/users/{userId}/wikiContent/{sectionId}
+    // Document path: artifacts/{appId}/users/{currentUserId}/wikiContent/{sectionId}
     const contentRef = doc(db, `artifacts/${appId}/users/${currentUserId}/wikiContent`, sectionId);
 
+    console.log(`Attempting to save content for section: ${sectionId} with User ID: ${currentUserId}`);
     try {
         await setDoc(contentRef, { content: contentInput });
         console.log(`Content for ${sectionId} saved successfully!`);
@@ -129,7 +133,7 @@ async function saveSectionContent(sectionId) {
 // Function to load content for a specific section from Firestore using onSnapshot
 function loadSectionContent(sectionId) {
     if (!currentUserId) {
-        console.log(`Cannot load content for ${sectionId}: User not authenticated yet.`);
+        console.log(`Cannot load content for ${sectionId}: User not authenticated yet. Skipping load.`);
         return;
     }
 
@@ -166,6 +170,7 @@ function loadSectionContent(sectionId) {
                 // Render Markdown to HTML
                 contentDisplay.innerHTML = marked.parse(markdownContent);
             }
+            console.log(`Content loaded for section: ${sectionId}`);
         } else {
             if (contentInput) {
                 contentInput.value = ''; // Clear textarea if no content
